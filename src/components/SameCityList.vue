@@ -212,9 +212,10 @@ import { ImagePreview } from "vant";
 Vue.use(ImagePreview);
 
 export default {
-    props: ["cards", "type"],
+    props: ["list", "type"],
     data() {
         return {
+            cards : this.list,
             number: 1,
             scrollLoginBlock: false,
             pullDown: "m-font-down",

@@ -5,7 +5,7 @@
             <div v-if="list.length > 0" style="width:100%;height:100%">
                 <div v-if="type === 'samecity'" style="width:100%;height:100%">
                     <SameCityList 
-                        :cards="list" 
+                        :list="list" 
                         :type="type"
                         @video="getVideoSrc"
                         @loginShow="handleLoginShow"
@@ -13,7 +13,7 @@
                 </div>
                 <div v-else style="width:100%;height:100%">
                     <WeiboList
-                        :cards="list"
+                        :list="list"
                         :type="type"
                         @video="getVideoSrc"
                         @loginShow="handleLoginShow"

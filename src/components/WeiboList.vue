@@ -180,9 +180,10 @@ import { ImagePreview } from "vant";
 Vue.use(ImagePreview);
 
 export default {
-    props: ["cards", "type"],
+    props: ["list", "type"],
     data() {
         return {
+            cards : this.list,
             number: 1,
             scrollLoginBlock: false,
             pullDown: "m-font-down",
@@ -365,8 +366,8 @@ export default {
                     method: "get",
                     url: url
                 });
-                _this.cards = res.data.data.cards;
                 let reg = /href=["|'](.*?)["|']/g;
+                _this.cards = res.data.data.cards;
                 _this.cards.forEach((value, index) => {
                     value.mblog.text = value.mblog.text.replace(reg, "");
                 });
