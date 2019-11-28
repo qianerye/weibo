@@ -11,7 +11,214 @@
                 <i class="m-font m-font-dot-more"></i>
             </div>
         </div>
-        <div class="detail-scroll">
+        <div class="detail-scroll" v-if="type === 'samecity'">
+            <div class="wb-item">
+                <div class="card-wrap">
+                    <div class="card-title f-card-title" v-if="type === 'novelty'">
+                        <div class="m-ctrl-box">
+                            <div class="m-diy-btn m-box-col m-box-center m-box-center-a">
+                                <img
+                                    src="https://h5.sinaimg.cn/upload/1080/674/2017/12/25/timeline_title_novelty3x_default.png"
+                                />
+                                <a>{{card.title.text}}</a>
+                            </div>
+                        </div>
+                    </div>
+                    <header class="weibo-top m-box">
+                        <div class="m-avatar-box m-box-center">
+                            <a href="javascript:void(0)" class="m-img-box">
+                                <img :src="card.user.profile_image_url" />
+                                <i v-if="card.user.mbrank > 0" class="m-icon m-icon-goldv"></i>
+                            </a>
+                        </div>
+                        <div class="m-box-dir m-box-col m-box-center">
+                            <div class="m-text-box">
+                                <a href="javascript:void(0)">
+                                    <h3 class="m-text-cut">
+                                        {{card.user.screen_name}}
+                                        <i
+                                            v-if="card.user.mbrank > 0"
+                                            class="m-icon"
+                                            :class="'m-icon-vipl' + card.user.mbrank"
+                                        ></i>
+                                    </h3>
+                                </a>
+                                <h4 class="m-text-cut">
+                                    <span class="time">{{card.created_at}}</span>
+                                    <span
+                                        class="from"
+                                        v-if="card.source"
+                                    >来自 {{card.source}}</span>
+                                </h4>
+                            </div>
+                        </div>
+                    </header>
+                </div>
+                <article class="weibo-main">
+                    <div class="weibo-og">
+                        <div v-html="card.text" class="weibo-text"></div>
+                        <div
+                            class="weibo-media-wraps weibo-media f-media media-b"
+                            v-if="card.pic_num > 0"
+                        >
+                            <ul class="m-auto-list" v-if="card.pics.length === 4">
+                                <li
+                                    class="m-auto-box3"
+                                    v-for="(pic,index) in card.pics"
+                                    :key="pic.pid"
+                                    style="width:34%"
+                                >
+                                    <div class="m-img-box m-imghold-4-3">
+                                        <img
+                                            :src="pic.url"
+                                            @click.stop="getImgs(card.pics , index)"
+                                            class="f-bg-img"
+                                        />
+                                    </div>
+                                </li>
+                            </ul>
+                            <ul class="m-auto-list" v-else>
+                                <li
+                                    class="m-auto-box3"
+                                    v-for="(pic,index) in card.pics"
+                                    :key="pic.pid"
+                                >
+                                    <div class="m-img-box m-imghold-4-3">
+                                        <img
+                                            :src="pic.url"
+                                            @click="getImgs(card.pics , index)"
+                                            class="f-bg-img"
+                                        />
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="card-video type-video" v-if="card.obj_ext">
+                            <div class="mwb-video mwbv-play mwbv-info">
+                                <div class="m-img-box" v-if="card.page_info">
+                                    <img :src="card.page_info.page_pic.url" />
+                                </div>
+                                <button class="mwbv-play-button">
+                                    <span class="mwbv-icon"></span>
+                                </button>
+                                <div class="mwbv-info-bar">
+                                    <div class="m-box">
+                                        <div class="m-box-col">{{card.obj_ext}}</div>
+                                        <div class="time">0:15</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+            </div>
+            <div class="lite-page-tab">
+                <div class="tab-item">
+                    <i>
+                        转发
+                        <em></em>
+                    </i>
+                    <i
+                        v-if="card.reposts_count > 10000"
+                    >{{parseInt(card.reposts_count / 1000) / 10}}万</i>
+                    <i v-else>{{card.reposts_count}}</i>
+                </div>
+                <div class="tab-item cur">
+                    <i>
+                        评论
+                        <em></em>
+                    </i>
+                    <i
+                        v-if="card.comments_count > 10000"
+                    >{{parseInt(card.comments_count / 1000) / 10}}万</i>
+                    <i v-else>{{card.comments_count}}</i>
+                </div>
+                <div class="tab-item">
+                    <i>
+                        赞
+                        <em></em>
+                    </i>
+                    <i
+                        v-if="card.attitudes_count > 10000"
+                    >{{parseInt(card.attitudes_count / 1000) / 10}}万</i>
+                    <i v-else>{{card.attitudes_count}}</i>
+                </div>
+            </div>
+            <div class="commentList" v-if="commentList.length > 0">
+                <div class="comment-detail" v-for="(comment,index) in commentList" :key="index">
+                    <div class="head-portrait">
+                        <div class="img-box">
+                            <img :src="comment.user.profile_image_url" alt />
+                        </div>
+                    </div>
+                    <div class="comment-content">
+                        <div class="user-name">
+                            <h4>{{comment.user.screen_name}}</h4>
+                        </div>
+                        <div class="comment-text">
+                            <p v-html="comment.text"></p>
+                            <span class="comment-con-img" v-if="comment.pic">
+                                <img
+                                    :src="comment.pic.url" @click="getImgs(comment.pic.large.url)"
+                                />
+                            </span>
+                        </div>
+                        <div class="reply" v-if="comment.total_number > 0">
+                            <div v-if="comment.comments">
+                                <p v-for="(comment2,index) in comment.comments" :key="index">
+                                    <a>{{comment2.user.screen_name}}</a>
+                                    :
+                                    <span
+                                        v-html="comment2.text"
+                                    ></span>
+                                    <a
+                                        v-if="comment.total_number > 2 && comment.total_number < 10000"
+                                    >共{{comment.total_number}}条回复></a>
+                                </p>
+                            </div>
+                            <div v-if="comment.more_info_users && !comment.comments">
+                                <div v-if="comment.total_number >= 10000">
+                                    <a
+                                        href="javascript:void(0)"
+                                    >{{comment.more_info_users[0].screen_name}}</a>等人
+                                    <a>共{{parseInt(comment.total_number / 1000) / 10}}万条回复></a>
+                                </div>
+                                <div v-else>
+                                    <a
+                                        href="javascript:void(0)"
+                                    >{{comment.more_info_users[0].screen_name}}</a>等人
+                                    <a>共{{comment.total_number}}条回复></a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="comment-info">
+                            <div class="comment-time">{{comment.created_at}}</div>
+                            <div class="comment-interaction">
+                                <div class="comment-fabulous">
+                                    <i
+                                        data-v-3e391902
+                                        class="lite-iconf lite-iconf-like"
+                                        style="font-size:.14rem"
+                                    ></i>
+                                    <span
+                                        v-if="comment.like_count > 10000"
+                                    >{{parseInt(comment.like_count / 1000) / 10}}万</span>
+                                    <span v-else>{{comment.like_count}}</span>
+                                </div>
+                                <div class="comment-comment">
+                                    <i
+                                        data-v-3e391902
+                                        class="lite-iconf lite-iconf-comments"
+                                        style="font-size:.14rem"
+                                    ></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="detail-scroll" v-else>
             <div class="wb-item">
                 <div class="card-wrap">
                     <div class="card-title f-card-title" v-if="type === 'novelty'">

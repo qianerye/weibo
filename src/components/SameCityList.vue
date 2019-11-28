@@ -153,7 +153,7 @@
                                             <div class="m-box-col">{{card.obj_ext}}</div>
                                             <div
                                                 class="time"
-                                            >{{parseInt(card.mblog.page_info.media_info.duration / 60)}} : {{card.mblog.page_info.media_info.duration % 60}}</div>
+                                            >{{parseInt(card.page_info.media_info.duration / 60)}} : {{card.page_info.media_info.duration % 60}}</div>
                                         </div>
                                     </div>
                                 </div>
@@ -238,6 +238,7 @@ export default {
             this.$emit("video", { img, video });
         },
         detailClick(id, card) {
+            console.log(id , card)
             store.set("h5_feed_card", card);
             this.$router.push({
                 path: `/detail/${id}`
@@ -404,6 +405,10 @@ export default {
                     url: url
                 });
                 _this.cards = res.data.data.statuses;
+                let reg = /href=["|'](.*?)["|']/g;
+                _this.cards.forEach((value, index) => {
+                    value.text = value.text.replace(reg, "");
+                });
                 this.finishPullDown();
                 this.refresh();
                 _this.loading = false;
@@ -423,6 +428,10 @@ export default {
                 });
                 let newList = newResult.data.data.statuses;
                 _this.cards = [..._this.cards, ...newList];
+                let reg = /href=["|'](.*?)["|']/g;
+                _this.cards.forEach((value, index) => {
+                    value.text = value.text.replace(reg, "");
+                });
                 this.finishPullUp();
                 this.refresh();
                 _this.number++;

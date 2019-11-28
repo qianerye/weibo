@@ -44,7 +44,10 @@
                                         </a>
                                         <h4 class="m-text-cut">
                                             <span class="time">{{card.mblog.created_at}}</span>
-                                            <span class="from" v-if="card.mblog.source"> 来自 {{card.mblog.source}}</span>
+                                            <span
+                                                class="from"
+                                                v-if="card.mblog.source"
+                                            >来自 {{card.mblog.source}}</span>
                                         </h4>
                                     </div>
                                 </div>
@@ -58,7 +61,11 @@
                         </div>
                         <article class="weibo-main">
                             <div class="weibo-og">
-                                <div v-html="card.mblog.text" @click="detailClick(card.mblog.id , card)" class="weibo-text"></div>
+                                <div
+                                    v-html="card.mblog.text"
+                                    @click="detailClick(card.mblog.id , card)"
+                                    class="weibo-text"
+                                ></div>
                                 <div
                                     class="weibo-media-wraps weibo-media f-media media-b"
                                     v-if="card.mblog.pic_num > 0"
@@ -71,7 +78,11 @@
                                             style="width:34%"
                                         >
                                             <div class="m-img-box m-imghold-4-3">
-                                                <img :src="pic.url" @click.stop="getImgs(card.mblog.pics , index)" class="f-bg-img" />
+                                                <img
+                                                    :src="pic.url"
+                                                    @click.stop="getImgs(card.mblog.pics , index)"
+                                                    class="f-bg-img"
+                                                />
                                             </div>
                                         </li>
                                     </ul>
@@ -82,25 +93,35 @@
                                             :key="pic.pid"
                                         >
                                             <div class="m-img-box m-imghold-4-3">
-                                                <img :src="pic.url" @click="getImgs(card.mblog.pics , index)" class="f-bg-img" />
+                                                <img
+                                                    :src="pic.url"
+                                                    @click="getImgs(card.mblog.pics , index)"
+                                                    class="f-bg-img"
+                                                />
                                             </div>
                                         </li>
                                     </ul>
                                 </div>
-                                <div class="card-video type-video" v-if="card.mblog.obj_ext && card.mblog.page_info">
+                                <div
+                                    class="card-video type-video"
+                                    v-if="card.mblog.obj_ext && card.mblog.page_info"
+                                >
                                     <div class="mwb-video mwbv-play mwbv-info">
                                         <div class="m-img-box" v-if="card.mblog.page_info">
-                                            <img
-                                                :src="card.mblog.page_info.page_pic.url"
-                                            />
+                                            <img :src="card.mblog.page_info.page_pic.url" />
                                         </div>
-                                        <button class="mwbv-play-button" @click="handleVideoShowClick(card.mblog.page_info.page_pic.url , card.mblog.page_info.media_info.mp4_hd_url)">
+                                        <button
+                                            class="mwbv-play-button"
+                                            @click="handleVideoShowClick(card.mblog.page_info.page_pic.url , card.mblog.page_info.media_info.mp4_hd_url)"
+                                        >
                                             <span class="mwbv-icon"></span>
                                         </button>
                                         <div class="mwbv-info-bar">
                                             <div class="m-box">
                                                 <div class="m-box-col">{{card.mblog.obj_ext}}</div>
-                                                <div class="time">{{parseInt(card.mblog.page_info.media_info.duration / 60)}} : {{card.mblog.page_info.media_info.duration % 60}}</div>
+                                                <div
+                                                    class="time"
+                                                >{{parseInt(card.mblog.page_info.media_info.duration / 60)}} : {{card.mblog.page_info.media_info.duration % 60}}</div>
                                             </div>
                                         </div>
                                     </div>
@@ -115,7 +136,10 @@
                                 >{{parseInt(card.mblog.reposts_count / 1000) / 10}}万</h4>
                                 <h4 v-else>{{card.mblog.reposts_count}}</h4>
                             </div>
-                            <div  @click="detailClick(card.mblog.id , card)" class="m-diy-btn m-box-center-a weibo-comments">
+                            <div
+                                @click="detailClick(card.mblog.id , card)"
+                                class="m-diy-btn m-box-center-a weibo-comments"
+                            >
                                 <i class="lite-iconf lite-iconf-comments"></i>
                                 <h4
                                     v-if="card.mblog.comments_count > 10000"
@@ -150,9 +174,9 @@
 import Vue from "vue";
 import BScoll from "better-scroll";
 import { ajax } from "utils/ajax";
-import store from 'store'
+import store from "store";
 
-import { ImagePreview } from 'vant';
+import { ImagePreview } from "vant";
 Vue.use(ImagePreview);
 
 export default {
@@ -172,26 +196,26 @@ export default {
         this.inscroll(this);
     },
     methods: {
-        handleVideoShowClick(img , video){
-            this.$emit('video' , {img , video})
+        handleVideoShowClick(img, video) {
+            this.$emit("video", { img, video });
         },
-        detailClick(id , card){
-            store.set('h5_feed_card' , card)
+        detailClick(id, card) {
+            store.set("h5_feed_card", card);
             this.$router.push({
-                path : `/detail/${id}`,  
-            })
+                path: `/detail/${id}`
+            });
         },
-        getImgs(images , index){
-            let imgs = []
+        getImgs(images, index) {
+            let imgs = [];
             images.forEach(item => {
-                imgs.push(item.large.url)
-            })
+                imgs.push(item.large.url);
+            });
             ImagePreview({
                 images: imgs,
                 startPosition: index,
-                showIndex : true,
-                loop : false,
-                maxZoom : 5
+                showIndex: true,
+                loop: false,
+                maxZoom: 5
             });
         },
         inscroll(obj) {
@@ -281,20 +305,19 @@ export default {
                 }
             };
             let moreReq = {
-                popular : 'sinceid=',
-                novelty : 'page=',
-                samecity : 'page=',
-                funny : 'sinceid=',
-                emotion : 'sinceid=',
-                star : 'sinceid=',
-                sociology : 'sinceid=',
-                digital : 'sinceid=',
-                sports : 'sinceid=',
-                car : 'sinceid=',
-                movie : 'sinceid=',
-                game : 'sinceid=',
-
-            }
+                popular: "sinceid=",
+                novelty: "page=",
+                samecity: "page=",
+                funny: "sinceid=",
+                emotion: "sinceid=",
+                star: "sinceid=",
+                sociology: "sinceid=",
+                digital: "sinceid=",
+                sports: "sinceid=",
+                car: "sinceid=",
+                movie: "sinceid=",
+                game: "sinceid="
+            };
             let bscroll = new BScoll(".index-scroll", {
                 pullUpLoad: {
                     threshold: 0
@@ -308,7 +331,7 @@ export default {
                     speed: 20,
                     easeTime: 300
                 },
-                click : true,
+                click: true,
                 disableTouch: false
             });
             bscroll.scrollTo(0, -40);
@@ -321,12 +344,12 @@ export default {
                     _this.pullDown = "m-font-down";
                     _this.pullDownMessage = "下拉刷新···";
                 }
-                if(!_this.scrollLoginBlock){
-                    setTimeout(() => { 
-                        _this.$emit('loginShow' , bscroll.movingDirectionY)  
-                        _this.scrollLoginBlock = false
-                    } , 500)
-                    _this.scrollLoginBlock = true
+                if (!_this.scrollLoginBlock) {
+                    setTimeout(() => {
+                        _this.$emit("loginShow", bscroll.movingDirectionY);
+                        _this.scrollLoginBlock = false;
+                    }, 500);
+                    _this.scrollLoginBlock = true;
                 }
             });
             bscroll.on("scrollEnd", function() {
@@ -335,7 +358,7 @@ export default {
                 }
             });
             bscroll.on("pullingDown", async function() {
-                let url = req[_this.type].api
+                let url = req[_this.type].api;
                 _this.pullDownMessage = "加载中···";
                 _this.loading = true;
                 let res = await ajax({
@@ -343,13 +366,21 @@ export default {
                     url: url
                 });
                 _this.cards = res.data.data.cards;
+                let reg = /href=["|'](.*?)["|']/g;
+                _this.cards.forEach((value, index) => {
+                    value.mblog.text = value.mblog.text.replace(reg, "");
+                });
                 this.finishPullDown();
                 this.refresh();
                 _this.loading = false;
                 this.scrollTo(0, -40, 500);
             });
             bscroll.on("pullingUp", async function() {
-                let url = req[_this.type].api + '&' + moreReq[_this.type] + _this.number
+                let url =
+                    req[_this.type].api +
+                    "&" +
+                    moreReq[_this.type] +
+                    _this.number;
                 _this.pullUpMessage = "加载中···";
                 _this.loading = true;
                 let newResult = await ajax({
@@ -358,6 +389,10 @@ export default {
                 });
                 let newList = newResult.data.data.cards;
                 _this.cards = [..._this.cards, ...newList];
+                let reg = /href=["|'](.*?)["|']/g;
+                _this.cards.forEach((value, index) => {
+                    value.mblog.text = value.mblog.text.replace(reg, "");
+                });
                 this.finishPullUp();
                 this.refresh();
                 _this.number++;
@@ -371,7 +406,8 @@ export default {
 
 <style lang='stylus'>
 @import '~assets/libs/border.styl'
-body 
+
+body
     width 100%
     height 100%
     position relative
@@ -381,7 +417,7 @@ body
         left 0
         width 100% !important
         height 100% !important
-        background #000    
+        background #000
         .van-swipe
             width 100% !important
             height 100% !important
@@ -393,8 +429,8 @@ body
                         width 100%
                         height 100%
                         display flex
-                        justify-content: center;
-                        img 
+                        justify-content center
+                        img
                             width 100%
     .van-image-preview__index
         position absolute
@@ -406,14 +442,14 @@ body
     .card-wrap
         height 100%
         .card-title
-            padding-top .1rem 
-            padding-left .12rem
-            padding-bottom .08rem
+            padding-top 0.1rem
+            padding-left 0.12rem
+            padding-bottom 0.08rem
             white-space nowrap
             text-overflow ellipsis
-            img 
-                width .14rem
-                height .14rem
+            img
+                width 0.14rem
+                height 0.14rem
             a
                 color #507DAF
         .m-box
@@ -422,8 +458,8 @@ body
             display flex
             padding 0.15rem 0.12rem 0 0.12rem
             .m-avatar-box
-                width .32rem
-                height .32rem
+                width 0.32rem
+                height 0.32rem
                 display flex
                 justify-content center
                 .m-img-box

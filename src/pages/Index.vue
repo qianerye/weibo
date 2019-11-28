@@ -84,6 +84,14 @@ export default {
             url: url
         });
         this.list = this.type === 'samecity' ? result.data.data.statuses : result.data.data.cards
+        this.list.forEach((value , index) => {
+            let reg =  /href=["|'](.*?)["|']/g
+            if(this.type === 'samecity'){
+                value.text = value.text.replace(reg , '')
+            }else{
+                value.mblog.text = value.mblog.text.replace(reg , '')
+            }
+        })
         let myAllData = JSON.parse(sessionstorage.getItem('myAllData')) || []
         this.list = [...myAllData , ...this.list]
     },
